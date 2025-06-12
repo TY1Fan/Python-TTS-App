@@ -8,8 +8,7 @@
 1. Create a virtual environment by running `python -m venv venv`
 1. Activate the virtual environment by running `source venv/bin/activate`
 1. Install the requirements by running `pip install -r requirements.txt`
-1. Create a file named `.env` 
-1. Create a variable in the `.env` file for ElevenLabs API. Name the variable `ELEVENLABS_API_KEY`.
+1. Paste your ELEVENLABS_API_KEY in the `.env` file.
 1. Run the `main` script to generate an audio by running `python main.py`
 
 ## ElevenLabs API:
