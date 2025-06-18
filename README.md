@@ -1,5 +1,9 @@
 # Python-TTS-App
 
+## Acknowledgement
+The audio in this application was generated using ElevenLabs.\
+Learn more at https://www.elevenlabs.io
+
 ## Environment:
 - Python version used: Python 3.12.1
 - TTS Service used: ElevenLabs
