@@ -1,5 +1,7 @@
 import os
 import csv
+import requests
+import zipfile
 
 from elevenlabs import ElevenLabs
 from dotenv import load_dotenv
@@ -10,7 +12,7 @@ api_key = os.getenv("ELEVENLABS_API_KEY")
 
 client = ElevenLabs(api_key=api_key)
 
-##### Code to check the voices available #####
+##### Function to check the voices available #####
 def get_available_voices():
     response = client.voices.get_all()
     voices = response.voices  # List of Voice objects
@@ -33,7 +35,7 @@ def get_available_voices():
         writer.writeheader()
         writer.writerows(voice_dicts)
 
-##### Code to generate audio file from text #####
+##### Function to generate audio file from text #####
 def generate_audio_from_text(model_id, voice_id, text, output_file):
     audio = client.text_to_speech.convert(
         voice_id=voice_id,
@@ -51,3 +53,38 @@ def get_usage():
     subscription = client.user.subscription.get()
     remainder = subscription.character_limit - subscription.character_count
     print(f"Character remaining: {remainder} characters")
+
+##### Function to get history of audio files generated #####
+def download_history_audio(output_dir="history_audio"):
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    history_response = client.history.list()
+    history_items = history_response.history
+
+    if not history_items:
+        print("No history items found.")
+        return
+
+    history_ids = [item.history_item_id for item in history_items]
+
+    url = "https://api.elevenlabs.io/v1/history/download"
+    payload = {"history_item_ids": history_ids}
+    headers = {
+        "xi-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    # Used ChatGPT to generate the code for downloading and extracting the zip file
+    zip_path = os.path.join(output_dir, "history_audio.zip")
+    with open(zip_path, "wb") as f:
+        f.write(response.content)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(output_dir)
+
+    os.remove(zip_path)
+
+download_history_audio()
