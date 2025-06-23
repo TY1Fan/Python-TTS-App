@@ -87,4 +87,7 @@ def download_history_audio(output_dir="history_audio"):
 
     os.remove(zip_path)
 
-download_history_audio()
+##### Function to delete a voice by voice_id #####
+def delete_voice(id):
+    client.history.delete(history_item_id=id,)
+
