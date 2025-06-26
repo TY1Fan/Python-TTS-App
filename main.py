@@ -2,6 +2,7 @@ import os
 import csv
 import requests
 import zipfile
+import time
 
 from elevenlabs import ElevenLabs
 from dotenv import load_dotenv
@@ -36,17 +37,24 @@ def get_available_voices():
         writer.writerows(voice_dicts)
 
 ##### Function to generate audio file from text #####
-def generate_audio_from_text(model_id, voice_id, text, output_file):
+def generate_audio_from_text(model_id, voice_id, text, output_file, settings):
+
+    start = time.time()
+
     audio = client.text_to_speech.convert(
         voice_id=voice_id,
         output_format="mp3_44100_128",
         text=text,
         model_id=model_id,
+        voice_settings=settings
     )
 
     with open(output_file, "wb") as f:
         for chunk in audio:
             f.write(chunk)
+
+    end = time.time()
+    print(f"Audio generated in {end - start:.2f} seconds and saved to {output_file}")
 
 ##### Function to check usage for the month #####
 def get_usage():
@@ -91,3 +99,8 @@ def download_history_audio(output_dir="history_audio"):
 def delete_voice(id):
     client.history.delete(history_item_id=id,)
 
+##### Generate audio from text script #####
+with open("revision_control.txt", "r") as f:
+    script = f.read()
+settings = {"stability": 0.7, "similarity_boost": 0.7, "speed": 0.95}
+audio = generate_audio_from_text(model_id="eleven_multilingual_v1", voice_id="iP95p4xoKVk53GoZ742B", text=script, output_file="rc.mp3", settings=settings)
