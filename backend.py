@@ -60,7 +60,10 @@ def generate_audio_from_text(model_id, voice_id, text, output_file, settings):
 def get_usage():
     subscription = client.user.subscription.get()
     remainder = subscription.character_limit - subscription.character_count
-    print(f"Character remaining: {remainder} characters")
+    result = f"Character remaining: {remainder} characters"
+
+    print(result)
+    return result
 
 ##### Function to get history of audio files generated #####
 def download_history_audio(output_dir="history_audio"):
@@ -102,7 +105,7 @@ def delete_voice(id):
 ##### Function to save API Key if it DNE #####
 def save_api_key(token):
     with open(".env", "w") as f:
-        f.write(f"ELEVENLABS_API_KEY={token}\n")
+        f.write(f'ELEVENLABS_API_KEY="{token}"\n')
     print(f"API key saved")
 
     load_dotenv(override=True)
