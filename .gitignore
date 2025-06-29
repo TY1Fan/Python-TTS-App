@@ -1,7 +1,16 @@
-/Python-TTS-App/.venv
-/Python-TTS-App/.env
-/Python-TTS-App/__pycache__
-/Python-TTS-App/dist
-/Python-TTS-App/build
-/Python-TTS-App/app.spec
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+
+# Python cache
+__pycache__/
+
+# Environment
+.env
+
+# macOS files
+.DS_Store
+
+# Audio files
 *.mp3
