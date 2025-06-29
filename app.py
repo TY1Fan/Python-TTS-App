@@ -19,12 +19,9 @@ if not os.path.isfile(".env"):
 
     def on_submit():
         api_key = api_key_entry.get()
-        # if api_key:
         backend.save_api_key(api_key)
         backend.client = backend.get_client()
         root.destroy()
-        # else:
-            # tk.messagebox.showerror("Error", "API Key cannot be empty.")
 
     submit_button = tk.Button(root, text="Submit", command=on_submit)
     submit_button.pack(pady=10)
