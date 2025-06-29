@@ -4,6 +4,8 @@
 The audio in this application was generated using ElevenLabs.\
 Learn more at https://www.elevenlabs.io
 
+Frontend inspired by this youtube tutorial: https://www.youtube.com/watch?v=aiC8K90MhgA&t=417s
+
 ## Environment:
 - Python version used: Python 3.12.1
 - TTS Service used: ElevenLabs
