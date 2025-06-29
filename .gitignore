@@ -1,3 +1,7 @@
 /Python-TTS-App/.venv
 /Python-TTS-App/.env
+/Python-TTS-App/__pycache__
+/Python-TTS-App/dist
+/Python-TTS-App/build
+/Python-TTS-App/app.spec
 *.mp3
