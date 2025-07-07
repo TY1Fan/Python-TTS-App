@@ -1,4 +1,4 @@
-from client import Client
+from backend.client import Client
 
 class User(Client):
 
