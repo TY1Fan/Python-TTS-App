@@ -15,4 +15,4 @@ __pycache__/
 # Audio files
 *.mp3
 
-backend/backend.py
+backend/test.py
