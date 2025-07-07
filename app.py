@@ -1,4 +1,3 @@
-# import backend
 import os
 import pygame
 import tkinter as tk
@@ -7,6 +6,7 @@ from tkinter import ttk
 from backend.client import Client
 from backend.user import User
 from backend.voice import Voice
+from frontend.screens.api_screen import api_screen
 
 ##### Initialize backend modules #####
 client = Client()
@@ -16,26 +16,7 @@ voice = Voice()
 ##### Frontend GUI setup #####
 # Check for api key
 if not os.path.isfile("backend/.env"):
-    root = tk.Tk()
-    root.title("API Key Required")
-
-    # Prompt user to enter the API key
-    label = tk.Label(root, text="Enter Elevenlabs API Key:")
-    label.pack(pady=10)
-
-    api_key_entry = tk.Entry(root)
-    api_key_entry.pack(pady=10)
-
-    def on_submit():
-        api_key = api_key_entry.get()
-        client.set_api_key(api_key)
-        client.set_client()
-        root.destroy()
-
-    submit_button = tk.Button(root, text="Submit", command=on_submit)
-    submit_button.pack(pady=10)
-
-    root.mainloop()
+    api_screen(client)
 
 def play_audio():
     if output_file_name:
