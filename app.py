@@ -1,12 +1,21 @@
-import backend
+# import backend
 import os
 import pygame
 import tkinter as tk
 
 from tkinter import ttk
+from backend.client import Client
+from backend.user import User
+from backend.voice import Voice
 
+##### Initialize backend modules #####
+client = Client()
+user = User()
+voice = Voice()
+
+##### Frontend GUI setup #####
 # Check for api key
-if not os.path.isfile(".env"):
+if not os.path.isfile("backend/.env"):
     root = tk.Tk()
     root.title("API Key Required")
 
@@ -19,8 +28,8 @@ if not os.path.isfile(".env"):
 
     def on_submit():
         api_key = api_key_entry.get()
-        backend.save_api_key(api_key)
-        backend.client = backend.get_client()
+        client.set_api_key(api_key)
+        client.set_client()
         root.destroy()
 
     submit_button = tk.Button(root, text="Submit", command=on_submit)
@@ -44,7 +53,7 @@ def generate_audio():
         voice_id = "onwK4e9ZLuTAKqWW03F9"
         settings = None
         output_file_name = "output.mp3"
-        backend.generate_audio_from_text(
+        voice.generate_audio_from_text(
             model_id=model_id,
             voice_id=voice_id,
             text=text,
@@ -62,7 +71,7 @@ window = tk.Tk()
 window.title("Python TTS App")
 
 # Label to display character usage
-label = ttk.Label(window, text=backend.get_usage())
+label = ttk.Label(window, text=user.get_usage())
 label.pack(pady=10)
 
 generate_button = tk.Button(
