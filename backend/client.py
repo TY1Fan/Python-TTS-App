@@ -5,10 +5,8 @@ from dotenv import load_dotenv
 
 class Client:
 
-    api_key: str
-    client: object
-
     def __init__(self):
+        load_dotenv(override=True)
         self.api_key = os.getenv("ELEVENLABS_API_KEY")
         self.client = ElevenLabs(api_key=self.api_key)
 
