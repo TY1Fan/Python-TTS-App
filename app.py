@@ -6,7 +6,7 @@ from tkinter import ttk
 from backend.client import Client
 from backend.user import User
 from backend.voice import Voice
-from frontend.screens.api_screen import api_screen
+from frontend.screens.api_screen import Api_Screen
 
 ##### Initialize backend modules #####
 client = Client()
@@ -16,7 +16,8 @@ voice = Voice()
 ##### Frontend GUI setup #####
 # Check for api key
 if not os.path.isfile("backend/.env"):
-    api_screen(client)
+    api_screen = Api_Screen(client)
+    api_screen.display_screen()
 
 def play_audio():
     if output_file_name:
