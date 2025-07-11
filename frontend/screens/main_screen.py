@@ -1,7 +1,10 @@
 import pygame
 import tkinter as tk
 
-from tkinter import ttk
+from frontend.components.label import Label
+from frontend.components.entry import Entry
+from frontend.components.button import Button
+from frontend.components.textentry import TextEntry
 
 class Main_Screen:
 
@@ -9,6 +12,10 @@ class Main_Screen:
         self.client = client
         self.user = user
         self.voice = voice
+        self.label = Label()
+        self.entry = Entry()
+        self.button = Button()
+        self.text_entry = TextEntry()
 
     def play_audio(self):
         if output_file_name:
@@ -37,29 +44,19 @@ class Main_Screen:
             print("No text provided for audio generation.")
 
     def display_screen(self):
-        # Initialize the main window
-        window = tk.Tk()
+        root = tk.Tk()
 
-        # Set title of GUI
-        window.title("Python TTS App")
+        root.title("Python TTS App")
 
-        # Label to display character usage
-        label = ttk.Label(window, text=self.user.get_usage())
-        label.pack(pady=10)
+        self.label.create_label(parent=root, text=self.user.get_usage(), pady=10)
 
-        generate_button = tk.Button(
-            window, text="Generate Audio", command=lambda: self.generate_audio(recognized_text_entry.get("1.0", tk.END).strip()))
-        generate_button.pack(pady=10)
-
-        play_button = tk.Button(window, text="Play", command=self.play_audio)
-        play_button.pack(pady=10)
-
-        stop_button = tk.Button(window, text="Stop", command=self.stop_audio)
-        stop_button.pack(pady=10)
-
-        recognized_text_entry = tk.Text(window, height=5, width=50)
-        recognized_text_entry.pack(pady=10)
+        command = lambda: self.generate_audio(text_entry.get("1.0", tk.END).strip())
+        
+        self.button.create_button(root, text="Generate Audio", command=command, pady=10)
+        self.button.create_button(root, text="Play", command=self.play_audio, pady=10)    
+        self.button.create_button(root, text="Stop", command=self.stop_audio, pady=10)
+        text_entry = self.text_entry.create_text_entry(parent=root, height=5, width=50, pady=10)
 
         pygame.mixer.init()
 
-        window.mainloop()
+        root.mainloop()
