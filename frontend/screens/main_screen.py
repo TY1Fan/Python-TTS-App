@@ -4,9 +4,7 @@ from frontend.components.label import Label
 from frontend.components.entry import Entry
 from frontend.components.button import Button
 from frontend.components.textentry import TextEntry
-from frontend.components.dropdown import Dropdown
-from frontend.components.slider import Slider
-from frontend.components.checkbutton import Checkbutton
+from frontend.panels.settings_panel import Settings_Panel
 
 class Main_Screen:
 
@@ -21,16 +19,27 @@ class Main_Screen:
         self.entry = Entry()
         self.button = Button()
         self.text_entry = TextEntry()
-        self.dropdown = Dropdown()
-        self.slider = Slider()
-        self.checkbutton = Checkbutton()
+        self.settings_card = Settings_Panel(client, voice, character)
 
     def display_screen(self):
         root = tk.Tk()
         root.title("Python TTS App")
 
-        char_names = self.character.get_char_names()
-        char_id = lambda: self.character.get_char_id(self.dropdown.widget.get())
+        main_frame = tk.Frame(root)
+        main_frame.pack(fill=tk.BOTH, expand=True)
+
+        left_frame = tk.Frame(main_frame, padx=10, pady=10)
+        left_frame.pack(side="left", fill=tk.Y)
+
+        separator = tk.Frame(main_frame, width=2, bg="gray")
+        separator.pack(side="left", fill=tk.Y)
+
+        right_frame = tk.Frame(main_frame, padx=20, pady=20)
+        right_frame.pack(side="left", fill=tk.BOTH, expand=True)
+
+        self.settings_card.display_card(right_frame)
+
+        char_id = self.settings_card.get_char_id
         generate_command = lambda: self.voice.generate_audio_from_text(
             text = text_entry.get("1.0", tk.END).strip(), 
             voice_id = char_id(),
@@ -39,52 +48,10 @@ class Main_Screen:
             settings = self.voice.get_voice_settings(character_id=char_id())
         )
         
-        self.label.create_label(parent=root, text=self.user.get_usage(), pady=10)
-        self.button.create_button(root, text="Generate Audio", command=generate_command, pady=10)
-        self.dropdown.create_dropdown(parent=root, values=char_names, pady=10)
-        settings = self.voice.get_voice_settings(character_id=char_id())
-
-        settings_config = {
-            "stability": (0.0, 1.0, settings.stability),
-            "similarity_boost": (0.0, 1.0, settings.similarity_boost),
-            "style": (0.0, 1.0, settings.style),
-            "speed": (0.7, 1.2, settings.speed)
-        }
-
-        self.slider_values = {}
-
-        for name, (min_val, max_val, initial_val) in settings_config.items():
-            var = self.slider.create_slider(
-                parent=root,
-                name=name,
-                from_=min_val,
-                to=max_val,
-                initial=initial_val,
-                resolution=0.01,
-            )
-            self.slider_values[name] = var
-
-        self.use_boost_var = tk.BooleanVar(value=settings.use_speaker_boost)
-        self.checkbutton.create_checkbox(root, text="Use Speaker Boost", var=self.use_boost_var, pady=5)
-
-        self.button.create_button(
-            root,
-            text="Save Settings",
-            command=lambda: self.voice.update_voice_settings(
-                char_id(),
-                {
-                    "stability": self.slider_values["stability"].get(),
-                    "similarity_boost": self.slider_values["similarity_boost"].get(),
-                    "style": self.slider_values["style"].get(),
-                    "speed": self.slider_values["speed"].get(),
-                    "use_speaker_boost": self.use_boost_var.get()
-                }
-            ),
-            pady=10
-        )
-
-        self.button.create_button(root, text="Play", command=lambda: self.voice.play_audio(self.output_file_name), pady=10)    
-        self.button.create_button(root, text="Stop", command=lambda: self.voice.stop_audio(), pady=10)
-        text_entry = self.text_entry.create_text_entry(parent=root, height=5, width=50, pady=10)
+        self.label.create_label(parent=left_frame, text=self.user.get_usage(), pady=10)
+        self.button.create_button(left_frame, text="Generate Audio", command=generate_command, pady=10)
+        self.button.create_button(left_frame, text="Play", command=lambda: self.voice.play_audio(self.output_file_name), pady=10)    
+        self.button.create_button(left_frame, text="Stop", command=lambda: self.voice.stop_audio(), pady=10)
+        text_entry = self.text_entry.create_text_entry(parent=left_frame, height=5, width=50, pady=10)
 
         root.mainloop()
