@@ -13,7 +13,7 @@ class Slider:
             to=to,
             resolution=resolution,
             orient="horizontal",
-            length=300,
+            length=200,
             variable=var,
         )
         slider.pack(pady=5)
