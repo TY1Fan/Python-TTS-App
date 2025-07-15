@@ -5,6 +5,8 @@ from frontend.components.entry import Entry
 from frontend.components.button import Button
 from frontend.components.textentry import TextEntry
 from frontend.panels.settings_panel import Settings_Panel
+from frontend.panels.history_panel import History_Panel
+from frontend.panels.main_panel import Main_Panel
 
 class Main_Screen:
 
@@ -19,11 +21,14 @@ class Main_Screen:
         self.entry = Entry()
         self.button = Button()
         self.text_entry = TextEntry()
-        self.settings_card = Settings_Panel(client, voice, character)
+        self.settings_panel = Settings_Panel(client, voice, character)
+        self.history_panel = History_Panel(user, voice)
+        self.main_panel = Main_Panel(user, voice, self.output_file_name)
 
     def display_screen(self):
         root = tk.Tk()
-        root.title("Python TTS App")
+        root.resizable(False, False)
+        root.title("ThinkAloud")
 
         main_frame = tk.Frame(root)
         main_frame.pack(fill=tk.BOTH, expand=True)
@@ -31,27 +36,22 @@ class Main_Screen:
         left_frame = tk.Frame(main_frame, padx=10, pady=10)
         left_frame.pack(side="left", fill=tk.Y)
 
-        separator = tk.Frame(main_frame, width=2, bg="gray")
-        separator.pack(side="left", fill=tk.Y)
+        separator_left = tk.Frame(main_frame, width=2, bg="gray")
+        separator_left.pack(side="left", fill=tk.Y)
+
+        center_frame = tk.Frame(main_frame, padx=20, pady=20)
+        center_frame.pack(side="left", fill=tk.BOTH, expand=True)
+
+        separator_right = tk.Frame(main_frame, width=2, bg="gray")
+        separator_right.pack(side="left", fill=tk.Y)
 
         right_frame = tk.Frame(main_frame, padx=20, pady=20)
         right_frame.pack(side="left", fill=tk.BOTH, expand=True)
 
-        self.settings_card.display_card(right_frame)
+        self.settings_panel.display_panel(right_frame)
+        self.history_panel.display_panel(left_frame)
 
-        char_id = self.settings_card.get_char_id
-        generate_command = lambda: self.voice.generate_audio_from_text(
-            text = text_entry.get("1.0", tk.END).strip(), 
-            voice_id = char_id(),
-            output_file = self.output_file_name,
-            model_id = "eleven_multilingual_v2",
-            settings = self.voice.get_voice_settings(character_id=char_id())
-        )
-        
-        self.label.create_label(parent=left_frame, text=self.user.get_usage(), pady=10)
-        self.button.create_button(left_frame, text="Generate Audio", command=generate_command, pady=10)
-        self.button.create_button(left_frame, text="Play", command=lambda: self.voice.play_audio(self.output_file_name), pady=10)    
-        self.button.create_button(left_frame, text="Stop", command=lambda: self.voice.stop_audio(), pady=10)
-        text_entry = self.text_entry.create_text_entry(parent=left_frame, height=5, width=50, pady=10)
+        char_id = self.settings_panel.get_char_id
+        self.main_panel.display_card(center_frame, char_id)
 
         root.mainloop()
