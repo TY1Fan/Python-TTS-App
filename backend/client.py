@@ -23,5 +23,14 @@ class Client:
         load_dotenv(override=True)
         self.client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
+    def is_valid_key(self, token):
+        try:
+            client = ElevenLabs(api_key=token)
+            client.user.get()
+            return True
+        except Exception as e:
+            print(f"Invalid API key: {e}")
+            return False
+
     
 
