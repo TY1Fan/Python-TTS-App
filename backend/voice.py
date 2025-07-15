@@ -9,24 +9,28 @@ class Voice(Character):
     def __init__(self):
         super().__init__()
 
-    
     def generate_audio_from_text(self, model_id, voice_id, text, output_file, settings):
-        start = time.time()
-        print(settings)
-        audio = self.client.text_to_speech.convert(
-            voice_id=voice_id,
-            output_format="mp3_44100_128",
-            text=text,
-            model_id=model_id,
-            voice_settings=settings
-        )
+        try:
+            start = time.time()
+            print(settings)
+            audio = self.client.text_to_speech.convert(
+                voice_id=voice_id,
+                output_format="mp3_44100_128",
+                text=text,
+                model_id=model_id,
+                voice_settings=settings
+            )
 
-        with open(output_file, "wb") as f:
-            for chunk in audio:
-                f.write(chunk)
+            with open(output_file, "wb") as f:
+                for chunk in audio:
+                    f.write(chunk)
 
-        end = time.time()
-        print(f"Audio generated in {end - start:.2f} seconds and saved to {output_file}")
+            end = time.time()
+            print(f"Audio generated in {end - start:.2f} seconds and saved to {output_file}")
+            return "Audio generated successfully"
+        except Exception as e:
+            print(f"Error generating audio: {e}")
+            return "Error generating audio"
 
     def get_voice_settings(self, character_id):
         settings = self.client.voices.settings.get(voice_id=character_id)
