@@ -24,22 +24,24 @@ Displays the remaining character tokens available based on your subscription tie
 ### Audio Generation
 ![alt text](./images/text_entry.png)
 
-Enter your thoughts into the text entry box. The text can be in `SSML` format for more life-like speech synthesis.\
-Press the `Generate Audio` button to generate an audio file for the text entry.\
-Press `Play` to play the audio file generated and `Stop` to stop the audio playback.
+To generate an audio file:
+- Enter your thoughts into the text entry box. The text can be in `SSML` format for more life-like speech synthesis.
+- Press the `Generate Audio` button to generate an audio file for the text entry.\
+- Press `Play` to play the audio file generated and `Stop` to stop the audio playback.
 
 **Note:** Pressing `Play` after `Stop` will replay the audio file from the start. I.e. `Stop` is not a pause button.
 
 ### Status Bar
 ![alt text](./images/status.png)
 
-After generating an audio, the status bar will show the status of operation executed. The remaining character count display will also update automatically.
+After generating an audio, the status bar will show the status of operation executed.\
+The remaining character count display will also update automatically.
 
 ### Character Selection
 ![alt text](./images/char.png)
 
 Select a character from the list of preset characters provided by ElevenLabs.\
-On selecting a character, the settings of the character will be displayed.
+On selecting a character, the latest settings configuration of the character will be displayed.
 
 ### Settings Configuration
 ![alt text](./images/config.png)
