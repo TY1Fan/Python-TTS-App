@@ -14,20 +14,30 @@ class Api_Screen:
         self.button = Button()
 
     def on_submit(self, root, api_key_entry):
-        api_key = api_key_entry.get()
-        self.client.set_api_key(api_key)
-        self.client.set_client()
-        root.destroy()
-        self.main_screen()
+        if self.client.is_valid_key(api_key_entry.get()):
+            api_key = api_key_entry.get()
+            self.client.set_api_key(api_key)
+            self.client.set_client()
+            root.destroy()
+            self.main_screen()
+        else:
+            api_key_entry.delete(0, tk.END)
+            api_key_entry.insert(0, "Invalid API Key.")
 
     def display_screen(self):
         root = tk.Tk()
+        root.resizable(False, False)
         root.title("API Key Required")
 
-        self.label.create_label(parent=root, text="Enter Elevenlabs API Key:", pady=10)
-        api_key_entry = self.entry.create_entry(parent=root, pady=10)
+        frame = tk.Frame(root, padx=20, pady=10)
+        frame.pack(fill=tk.BOTH, expand=True)
 
-        self.button.create_button(parent=root, text="Submit", command=lambda: self.on_submit(root, api_key_entry), pady=10)
+        self.label.create_label(frame, text="ThinkAloud", pady=(10, 2), font=("Helvetica", 20, "bold"))
+        self.label.create_label(frame, text="Generate your thoughts out loud", pady=(0, 15), font=("Helvetica", 12, "italic"))
+        self.label.create_label(frame, text="Enter Elevenlabs API Key:", pady=10)
+        api_key_entry = self.entry.create_entry(frame, pady=10)
+
+        self.button.create_button(frame, text="Submit", command=lambda: self.on_submit(root, api_key_entry), pady=10)
 
         root.mainloop()
         return self.client
