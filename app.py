@@ -7,14 +7,17 @@ from backend.character import Character
 from frontend.screens.api_screen import Api_Screen
 from frontend.screens.main_screen import Main_Screen
 
-client = Client()
-user = User()
-character = Character()
-voice = Voice()
-home_screen = Main_Screen(client, user, voice, character)
-api_screen = Api_Screen(client, home_screen.display_screen)
-
-if not os.path.isfile(".env"):
-    client = api_screen.display_screen()
-else:
+def launch_home_screen():
+    client = Client()
+    user = User()
+    voice = Voice()
+    character = Character()
+    home_screen = Main_Screen(client, user, voice, character)
     home_screen.display_screen()
+    
+if not os.path.isfile("env.txt"):
+    client = Client()
+    api_screen = Api_Screen(client, launch_home_screen)
+    api_screen.display_screen()
+else:
+    launch_home_screen()

@@ -37,7 +37,7 @@ class User(Client):
         url = "https://api.elevenlabs.io/v1/history/download"
         payload = {"history_item_ids": history_ids}
         headers = {
-            "xi-api-key": os.getenv("ELEVENLABS_API_KEY"),
+            "xi-api-key": self.get_api_key(),
             "Content-Type": "application/json"
         }
 
