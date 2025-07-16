@@ -40,4 +40,3 @@ class Api_Screen:
         self.button.create_button(frame, text="Submit", command=lambda: self.on_submit(root, api_key_entry), pady=10)
 
         root.mainloop()
-        return self.client
