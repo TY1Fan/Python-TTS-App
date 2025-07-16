@@ -48,9 +48,6 @@ class Settings_Panel:
         }
 
         for name, (min_val, max_val, initial_val) in settings_config.items():
-            if name == "similarity_boost":
-                name = "Similarity Boost"
-                
             var = self.slider.create_slider(
                 parent=parent,
                 name=name,
