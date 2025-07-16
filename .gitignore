@@ -7,7 +7,7 @@ dist/
 __pycache__/
 
 # Environment
-.env
+env.txt
 
 # macOS files
 .DS_Store
