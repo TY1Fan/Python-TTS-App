@@ -67,6 +67,16 @@ To play previously generated audio files:
 
 **Note:** This panel does not refresh automatically. Hence, press the `Refresh History` button to refresh this panel.
 
+## Known Issues:
+
+1. `env.txt` storage is not in the same directory as the app.\
+Description: After you key in your api key when prompted, the `env.txt` file is not saved in the save directory as your app.\
+Solution: The `env.txt` file is stored in your system root directory. Hence, if you would like to delete the app, please remember to search for the `env.txt` file in your system.
+
+1. UI Bug: `Similarity_boost`\
+Description: Currently the similarity boost configurations is labelled as `Similarity_boost`. The underscore is unintended.\
+Solution: Currently trying to find a way to remove the underscore without affecting the functionality of the settings panel.
+
 ## Sources:
 ```
 The audio in this application was generated using ElevenLabs.
