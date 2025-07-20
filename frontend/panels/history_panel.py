@@ -28,7 +28,7 @@ class History_Panel:
 
         if not self.char_folders:
             print("No audio folders found.")
-            return self.label.create_label(parent, text="No audio history available.", pady=10)
+            return self.char_folders
 
         if self.char_listbox:
             self.char_listbox.delete(0, tk.END)
@@ -50,32 +50,36 @@ class History_Panel:
         self.button.create_button(parent, text="Refresh History", command=lambda: self.refresh(parent), pady=5)
         self.refresh(parent)
 
-        # ChatGPT-4o used to generate the following code for handling character selection and audio playback:
-        def on_voice_select(event):
-            selected_index = self.char_listbox.curselection()
-            if selected_index:
-                voice_name = self.char_folders[selected_index[0]]
-                folder_path = os.path.join(self.output_dir, voice_name)
-                self.audio_files = [
-                    os.path.join(folder_path, f)
-                    for f in os.listdir(folder_path)
-                ]
-                self.audio_listbox.delete(0, tk.END)
-                for path in self.audio_files:
-                    self.audio_listbox.insert(tk.END, os.path.basename(path))
+        if not self.char_folders:
+            self.char_listbox = None 
+            return None
+        else:
+            # ChatGPT-4o used to generate the following code for handling character selection and audio playback:
+            def on_voice_select(event):
+                selected_index = self.char_listbox.curselection()
+                if selected_index:
+                    voice_name = self.char_folders[selected_index[0]]
+                    folder_path = os.path.join(self.output_dir, voice_name)
+                    self.audio_files = [
+                        os.path.join(folder_path, f)
+                        for f in os.listdir(folder_path)
+                    ]
+                    self.audio_listbox.delete(0, tk.END)
+                    for path in self.audio_files:
+                        self.audio_listbox.insert(tk.END, os.path.basename(path))
 
-        self.char_listbox.bind("<<ListboxSelect>>", on_voice_select)
+            self.char_listbox.bind("<<ListboxSelect>>", on_voice_select)
 
-        def on_play():
-            selected_index = self.audio_listbox.curselection()
-            if selected_index:
-                filepath = self.audio_files[selected_index[0]]
-                self.voice.play_audio(filepath)
+            def on_play():
+                selected_index = self.audio_listbox.curselection()
+                if selected_index:
+                    filepath = self.audio_files[selected_index[0]]
+                    self.voice.play_audio(filepath)
 
-        button_frame = tk.Frame(parent)
-        button_frame.pack(pady=10)
+            button_frame = tk.Frame(parent)
+            button_frame.pack(pady=10)
 
-        self.button.create_button(button_frame, text="Play", command=on_play, pady=5).pack(side="left", padx=5)
-        self.button.create_button(button_frame, text="Stop", command=self.voice.stop_audio, pady=5).pack(side="left", padx=5)
-        
+            self.button.create_button(button_frame, text="Play", command=on_play, pady=5).pack(side="left", padx=5)
+            self.button.create_button(button_frame, text="Stop", command=self.voice.stop_audio, pady=5).pack(side="left", padx=5)
+            
 
