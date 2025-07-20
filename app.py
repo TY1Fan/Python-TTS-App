@@ -15,9 +15,10 @@ def launch_home_screen():
     home_screen = Main_Screen(client, user, voice, character)
     home_screen.display_screen()
     
-if not os.path.isfile("env.txt"):
-    client = Client()
-    api_screen = Api_Screen(client, launch_home_screen)
-    api_screen.display_screen()
-else:
-    launch_home_screen()
+if __name__ == "__main__":
+    if not os.path.isfile("env.txt"):
+        client = Client()
+        api_screen = Api_Screen(client, launch_home_screen)
+        api_screen.display_screen()
+    else:
+        launch_home_screen()
