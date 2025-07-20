@@ -25,7 +25,7 @@ class User(Client):
 
         os.makedirs(output_dir, exist_ok=True)
 
-        history_response = self.client.history.list()
+        history_response = self.client.history.list(page_size=20)
         history_items = history_response.history
 
         if not history_items:
