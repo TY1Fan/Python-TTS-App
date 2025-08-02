@@ -10,8 +10,9 @@ class Client:
         self.credentials = self._load_credentials()
         self.client = self.set_client()
         if client_name == "AWS":
-            self.session = self.set_session()
+            self.session = self.set_polly_session()
 
+    # Used ChatGPT-4o to generate lines 16 - 49 for better credential management
     def _load_credentials(self):
         creds = {}
         if not os.path.isfile(self.API_KEY_FILE):
@@ -63,7 +64,7 @@ class Client:
             self.client = polly_client
             return polly_client
     
-    def set_session(self):
+    def set_polly_session(self):
         if self.client_name == "AWS":
             return boto3.Session(
                 aws_access_key_id=self.credentials.get("AWS_ACCESS_KEY_ID"),
@@ -81,3 +82,16 @@ class Client:
             print(f"Invalid API key: {e}")
             return False
     
+    def is_valid_aws_key(self, access_key, secret_key):
+        try:
+            client = boto3.client(
+                'polly',
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key,
+                region_name="us-east-1"
+            )
+            client.describe_voices()
+            return True
+        except Exception as e:
+            print(f"Invalid AWS credentials: {e}")
+            return False
