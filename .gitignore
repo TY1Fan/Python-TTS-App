@@ -14,5 +14,7 @@ env.txt
 
 # Audio files
 *.mp3
+*.aiff
+*.wav
 
 backend/test.py

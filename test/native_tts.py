@@ -11,9 +11,11 @@ def speech_synthesis(text, rate, volume):
     engine.runAndWait()
 
 ###### For testing saving to file ######
-def save_to_file(text, filename):
-    engine.save_to_file(text, filename)
-    engine.runAndWait()
+def save_to_file(text, output_path, rate=150, volume=1.0):
+    engine.setProperty('rate', rate) # Integer speech rate in words per minute.
+    engine.setProperty('volume', volume) # 0.0 to 1.0
+    engine.save_to_file(text, output_path) # Needs to be AIFF for MacOS 
+    engine.runAndWait() 
 
 ###### For testing different voices ######
 def get_available_voices():
@@ -36,3 +38,5 @@ def get_available_voices():
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(voice_dicts)
+
+save_to_file("hi", "test_output.aiff")
