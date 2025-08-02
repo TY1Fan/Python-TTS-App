@@ -16,7 +16,7 @@ class Api_Screen:
     def on_submit(self, root, api_key_entry):
         if self.client.is_valid_key(api_key_entry.get()):
             api_key = api_key_entry.get()
-            self.client.set_api_key(api_key)
+            self.client.set_credential("ELEVENLABS_API_KEY", api_key)
             self.client.set_client()
             root.destroy()
             self.main_screen()

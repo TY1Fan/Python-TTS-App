@@ -6,8 +6,8 @@ from backend.client import Client
 
 class User(Client):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, client_name):
+        super().__init__(client_name=client_name)
     
     def get_usage(self):
         try:
@@ -37,7 +37,7 @@ class User(Client):
         url = "https://api.elevenlabs.io/v1/history/download"
         payload = {"history_item_ids": history_ids}
         headers = {
-            "xi-api-key": self.get_api_key(),
+            "xi-api-key": self.credentials.get("ELEVENLABS_API_KEY"),
             "Content-Type": "application/json"
         }
 

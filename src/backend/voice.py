@@ -6,8 +6,8 @@ from elevenlabs import VoiceSettings
 
 class Voice(Character):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, client_name):
+        super().__init__(client_name=client_name)
 
     def generate_audio_from_text(self, model_id, voice_id, text, output_file, settings):
         try:

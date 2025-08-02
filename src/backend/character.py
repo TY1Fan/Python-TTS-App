@@ -2,8 +2,8 @@ from backend.client import Client
 
 class Character(Client):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, client_name):
+        super().__init__(client_name=client_name)
 
     def get_char_names(self):
         response = self.client.voices.get_all()
