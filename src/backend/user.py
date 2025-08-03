@@ -9,6 +9,7 @@ class User(Client):
     def __init__(self, client_name):
         super().__init__(client_name=client_name)
     
+    ##### For ElevenLabs Users #####
     def get_usage(self):
         try:
             subscription = self.client.user.subscription.get()
@@ -55,3 +56,4 @@ class User(Client):
 
         # Return list of downloaded files
         return [os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.endswith(".mp3")]
+    

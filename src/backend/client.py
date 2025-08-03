@@ -48,7 +48,7 @@ class Client:
         elif key == "AWS_SECRET_ACCESS_KEY":
             self.aws_secret = self.credentials[key]
 
-    def set_client(self):
+    def set_client(self, region_name="us-east-1"):
         if self.client_name == "ElevenLabs":
             client = ElevenLabs(api_key=self.credentials.get("ELEVENLABS_API_KEY"))
             self.client = client
@@ -59,7 +59,7 @@ class Client:
                 'polly',
                 aws_access_key_id=self.credentials.get("AWS_ACCESS_KEY_ID"),
                 aws_secret_access_key=self.credentials.get("AWS_SECRET_ACCESS_KEY"),
-                region_name="us-east-1"
+                region_name=region_name
             )
             self.client = polly_client
             return polly_client
@@ -95,3 +95,11 @@ class Client:
         except Exception as e:
             print(f"Invalid AWS credentials: {e}")
             return False
+        
+    ##### For AWS Users #####
+    def set_region(self, region_name):
+        self.set_client(region_name=region_name)
+ 
+    def get_region(self):
+        region = self.session.get_available_regions('polly')
+        return region
