@@ -1,5 +1,8 @@
 import time
 import pygame
+import os
+import datetime
+import shutil
 
 from backend.character import Character
 from elevenlabs import VoiceSettings
@@ -34,10 +37,29 @@ class Voice(Character):
                     for chunk in audio["AudioStream"]:
                         f.write(chunk)
 
+                self.save_to_aws(output_file, voice_id)
+
             return "Audio generated successfully"           
         except Exception as e:
             print(f"Error generating audio: {e}")
             return "Error generating audio"
+
+    def save_to_aws(self, output_file, voice_id):
+        audio_folder = "aws_audio"
+        voice_name = voice_id.lower()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H_%M_%S")
+        
+        # Create the directory structure if it doesn't exist
+        history_dir = os.path.join(audio_folder, voice_name)
+        os.makedirs(history_dir, exist_ok=True)
+        
+        # Create the history filename with timestamp
+        history_filename = f"{timestamp}_{voice_name}.mp3"
+        history_path = os.path.join(history_dir, history_filename)
+        
+        # Copy the generated audio file to the history folder
+        shutil.copy2(output_file, history_path)
+        print(f"Audio saved to history: {history_path}")
 
     def get_voice_settings(self, character_id):
         if self.client_name == "ElevenLabs":
