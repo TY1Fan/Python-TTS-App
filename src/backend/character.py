@@ -40,18 +40,3 @@ class Character(Client):
     def get_char_id(self, char_name):
         char_map = self.get_char_name_id_map()
         return char_map.get(char_name)
-    
-    def get_language_code(self, region_name, engine):
-        self.set_region(region_name)
-        print(self.client)
-        response = self.client.describe_voices(
-            Engine=engine,
-        )
-
-        languages = set()
-        voices = response["voices"]
-        for voice in voices['Voices']:
-            language_name = voice['LanguageName']
-            languages.add(language_name)
-
-        return sorted(languages)
