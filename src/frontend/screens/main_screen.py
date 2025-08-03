@@ -52,6 +52,6 @@ class Main_Screen:
         self.history_panel.display_panel(left_frame)
 
         char_id = self.settings_panel.get_char_id
-        self.main_panel.display_card(center_frame, char_id)
+        self.main_panel.display_card(center_frame, char_id, root)
 
         root.mainloop()
