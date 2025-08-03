@@ -5,7 +5,7 @@ from frontend.components.entry import Entry
 from frontend.components.button import Button
 from frontend.components.textentry import TextEntry
 from frontend.panels.aws_setting_panel import AWS_Settings_Panel
-from frontend.panels.history_panel import History_Panel
+from frontend.panels.aws_history_panel import AWS_History_Panel
 from frontend.panels.aws_main_panel import AWS_Main_Panel
 
 class AWS_Screen:
@@ -22,7 +22,7 @@ class AWS_Screen:
         self.button = Button()
         self.text_entry = TextEntry()
         self.settings_panel = AWS_Settings_Panel(client, voice, character)
-        self.history_panel = History_Panel(user, voice)
+        self.history_panel = AWS_History_Panel(user, voice)
         self.main_panel = AWS_Main_Panel(user, voice, self.output_file_name)
 
     def display_screen(self):
@@ -49,7 +49,7 @@ class AWS_Screen:
         right_frame.pack(side="left", fill=tk.BOTH, expand=True)
 
         self.settings_panel.display_panel(right_frame)
-        # self.history_panel.display_panel(left_frame)
+        self.history_panel.display_panel(left_frame)
 
         char_id = self.settings_panel.get_char_id
         self.main_panel.display_card(center_frame, char_id, root)
