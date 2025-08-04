@@ -57,4 +57,4 @@ class Main_Panel:
 
         self.button.create_button(button_frame, text="Generate Audio", command=generate_command, pady=10).pack(side="left", padx=5)
         self.button.create_button(button_frame, text="Play", command=lambda: self.voice.play_audio(self.output_file_name), pady=10).pack(side="left", padx=5)
-        self.button.create_button(button_frame, text="Stop", command=lambda: self.voice.stop_audio, pady=10).pack(side="left", padx=5)
+        self.button.create_button(button_frame, text="Stop", command=lambda: self.voice.stop_audio(), pady=10).pack(side="left", padx=5)
