@@ -22,7 +22,7 @@ class AWS_Settings_Panel:
 
         self.selected_region_name = tk.StringVar()
         self.selected_engine_name = tk.StringVar()
-        # self.selected_lang_code = tk.StringVar()
+        self.selected_lang_name = tk.StringVar()
         self.selected_char_name = tk.StringVar()
 
         self.label.create_label(parent, "Select AWS Region:", pady=10)
@@ -32,7 +32,7 @@ class AWS_Settings_Panel:
             textvariable=self.selected_region_name, pady=10
         )
 
-        engine = ["Standard", "Neural"]
+        engine = self.client.get_engines(self.selected_region_name.get())
         self.label.create_label(parent, "Select Engine:", pady=10)
         self.engine_dropdown = self.dropdown.create_dropdown(
             parent, 
@@ -40,16 +40,22 @@ class AWS_Settings_Panel:
             textvariable=self.selected_engine_name, pady=10
         )
 
-        # lang_code = self.character.get_language_code(region_name=self.selected_region_name.get(), engine=self.selected_engine_name.get())
-        # self.label.create_label(parent, "Select Language Code:", pady=10)
-        # self.language_code_dropdown = self.dropdown.create_dropdown(
-        #     parent, 
-        #     values=lang_code,
-        #     textvariable=self.selected_lang_code, pady=10
-        # )
+        lang_name = self.character.get_lang_name(region=self.selected_region_name.get(), engine=self.selected_engine_name.get().lower())
+        self.label.create_label(parent, "Select Language Code:", pady=10)
+        self.language_code_dropdown = self.dropdown.create_dropdown(
+            parent, 
+            values=lang_name,
+            textvariable=self.selected_lang_name, pady=10
+        )
 
+        lang_code = self.character.get_lang_code(
+            self.selected_region_name.get(), 
+            self.selected_engine_name.get().lower(),
+            self.selected_lang_name.get()
+        )
         char_names = self.character.get_char_names(
             engine=self.selected_engine_name.get().lower(),
+            language_code=lang_code
         )
         self.label.create_label(parent, "Select Character:", pady=10)
         self.char_dropdown = self.dropdown.create_dropdown(
@@ -57,11 +63,14 @@ class AWS_Settings_Panel:
             values=char_names,
             textvariable=self.selected_char_name, pady=10
         )
-
+    
     def get_char_id(self):
         print(self.selected_char_name.get())
-        return self.character.get_char_id(self.selected_char_name.get())
-    
+        return self.character.get_char_id(
+            self.selected_char_name.get(),
+            self.selected_engine_name.get().lower(),
+            self.selected_lang_name.get()
+        )
 
 
 
