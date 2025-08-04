@@ -99,7 +99,38 @@ class Client:
     ##### For AWS Users #####
     def set_region(self, region_name):
         self.set_client(region_name=region_name)
- 
+    
     def get_region(self):
-        region = self.session.get_available_regions('polly')
-        return region
+        available_regions = []
+        all_regions = self.session.get_available_regions('polly')
+            
+        for region in all_regions:
+            try:
+                temp_client = boto3.client(
+                    'polly',
+                    aws_access_key_id=self.credentials.get("AWS_ACCESS_KEY_ID"),
+                    aws_secret_access_key=self.credentials.get("AWS_SECRET_ACCESS_KEY"),
+                    region_name=region
+                )
+                temp_client.describe_voices()
+                available_regions.append(region)
+            except Exception as e:
+                print(f"Region {region} is not accessible: {e}")
+                continue
+        return available_regions
+    
+    def get_engines(self, region_name):
+        all_engines = ["Standard", "Neural", "Long-form", "Generative"]
+        available_engines = []
+
+        for engine in all_engines:
+            try:
+                self.set_region(region_name)
+                response = self.client.describe_voices(Engine=engine.lower())
+                if response['Voices']:
+                    available_engines.append(engine)
+            except Exception as e:
+                print(f"Engine {engine} is not accessible in region {region_name}: {e}")
+                continue
+
+        return available_engines
