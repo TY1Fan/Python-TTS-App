@@ -27,13 +27,15 @@ class AWS_Main_Panel:
         # Start the app again in a new process
         subprocess.Popen([python, script_path])
 
-    def display_card(self, parent, char_id, root):
+    def display_card(self, parent, root, char_id, engine, lang_code, text_type):
         def generate_command(): 
             message = self.voice.generate_audio_from_text(
-                text = text_entry.get("1.0", tk.END).strip(), 
+                text = text_entry.get("1.0", tk.END).strip(),
                 voice_id = char_id(),
+                lang=lang_code(),
+                text_type=text_type(),
                 output_file = self.output_file_name,
-                model_id = "standard",
+                model_id = engine(),
             )
             status_label.delete(0, tk.END)
             status_label.insert(0, "Status: " + message)
