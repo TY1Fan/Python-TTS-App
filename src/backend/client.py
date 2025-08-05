@@ -1,6 +1,8 @@
 import os
-from elevenlabs import ElevenLabs
 import boto3
+
+from elevenlabs import ElevenLabs
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class Client:
     
@@ -103,8 +105,9 @@ class Client:
     def get_region(self):
         available_regions = []
         all_regions = self.session.get_available_regions('polly')
-            
-        for region in all_regions:
+
+        # ChatGPT-4o used to generate lines 110 - 130 for faster region checking
+        def check_region(region):
             try:
                 temp_client = boto3.client(
                     'polly',
@@ -113,24 +116,39 @@ class Client:
                     region_name=region
                 )
                 temp_client.describe_voices()
-                available_regions.append(region)
-            except Exception as e:
-                print(f"Region {region} is not accessible: {e}")
-                continue
+                return region
+            except Exception:
+                return None
+
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            futures = {executor.submit(check_region, region): region for region in all_regions}
+            for future in as_completed(futures):
+                region = future.result()
+                if region:
+                    available_regions.append(region)
+
         return available_regions
     
     def get_engines(self, region_name):
         all_engines = ["Standard", "Neural", "Long-form", "Generative"]
         available_engines = []
 
-        for engine in all_engines:
+        self.set_region(region_name)
+
+        # ChatGPT-4o used to generate lines 139 - 154 for faster region checking
+        def check_engine(engine):
             try:
-                self.set_region(region_name)
                 response = self.client.describe_voices(Engine=engine.lower())
                 if response['Voices']:
+                    return engine
+            except Exception:
+                return None
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = {executor.submit(check_engine, engine): engine for engine in all_engines}
+            for future in as_completed(futures):
+                engine = future.result()
+                if engine:
                     available_engines.append(engine)
-            except Exception as e:
-                print(f"Engine {engine} is not accessible in region {region_name}: {e}")
-                continue
 
         return available_engines
