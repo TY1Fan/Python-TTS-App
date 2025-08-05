@@ -1,3 +1,4 @@
 elevenlabs
 dotenv
 pygame
+boto3
