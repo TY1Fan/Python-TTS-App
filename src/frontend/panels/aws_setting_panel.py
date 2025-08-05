@@ -41,7 +41,7 @@ class AWS_Settings_Panel:
         )
 
         lang_name = self.character.get_lang_name(region=self.selected_region_name.get(), engine=self.selected_engine_name.get().lower())
-        self.label.create_label(parent, "Select Language Code:", pady=10)
+        self.label.create_label(parent, "Select Language:", pady=10)
         self.language_code_dropdown = self.dropdown.create_dropdown(
             parent, 
             values=lang_name,
