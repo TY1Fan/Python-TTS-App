@@ -13,16 +13,14 @@ from frontend.panels.aws_main_panel import AWS_Main_Panel
 class AWS_Screen:
 
     output_file_name = "output.mp3"
-    if getattr(sys, 'frozen', False):
-        # Running in a bundle (PyInstaller)
-        base_path = os.path.dirname(sys.executable)
-    else:
-        # Running as a script
-        base_path = os.path.dirname(os.path.abspath(__file__))
 
-    # Path to the .env or credentials file in the same folder as the exe/script
-    history_path = os.path.join(base_path, "aws_audio")
-    os.makedirs(history_path, exist_ok=True)
+    if getattr(sys, 'frozen', False):
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        current_file = os.path.abspath(__file__)
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+    audio_folder = os.path.join(base_dir, "aws_audio")
+    os.makedirs(audio_folder, exist_ok=True)
 
     def __init__(self, client, user, voice, character):
         self.client = client
@@ -34,7 +32,7 @@ class AWS_Screen:
         self.button = Button()
         self.text_entry = TextEntry()
         self.settings_panel = AWS_Settings_Panel(client, voice, character)
-        self.history_panel = AWS_History_Panel(user, voice, self.history_path)
+        self.history_panel = AWS_History_Panel(user, voice, self.audio_folder)
         self.main_panel = AWS_Main_Panel(user, voice, self.output_file_name)
 
     def display_screen(self):
