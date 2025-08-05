@@ -63,14 +63,65 @@ class AWS_Settings_Panel:
             values=char_names,
             textvariable=self.selected_char_name, pady=10
         )
+
+        self.selected_region_name.trace_add("write", self.on_region_change)
+        self.selected_engine_name.trace_add("write", self.on_engine_change)
+        self.selected_lang_name.trace_add("write", self.on_language_change)
+
+        self.use_ssml_var = tk.BooleanVar()
+        self.checkbutton.create_checkbox(parent, text="Use SSML Syntax", var=self.use_ssml_var, pady=5)
+
+    def on_region_change(self, *args):
+        region = self.selected_region_name.get()
+        engines = self.client.get_engines(region)
+        self.engine_dropdown['values'] = engines
+        if engines:
+            self.selected_engine_name.set(engines[0])
+
+    def on_engine_change(self, *args):
+        region = self.selected_region_name.get()
+        engine = self.selected_engine_name.get().lower()
+        languages = self.character.get_lang_name(region=region, engine=engine)
+        self.language_code_dropdown['values'] = languages
+        if languages:
+            self.selected_lang_name.set(languages[0])
+
+    def on_language_change(self, *args):
+        region = self.selected_region_name.get()
+        engine = self.selected_engine_name.get().lower()
+        language_name = self.selected_lang_name.get()
+        lang_code = self.character.get_lang_code(region, engine, language_name)
+        characters = self.character.get_char_names(engine=engine, language_code=lang_code)
+        self.char_dropdown['values'] = characters
+        if characters:
+            self.selected_char_name.set(characters[0])
+
     
     def get_char_id(self):
         print(self.selected_char_name.get())
         return self.character.get_char_id(
             self.selected_char_name.get(),
             self.selected_engine_name.get().lower(),
+            self.get_lang_code()
+        )
+    
+    def get_text_type(self):
+        if self.use_ssml_var.get():
+            return "ssml"
+        else:
+            return "text"
+        
+    def get_engine(self):
+        return self.selected_engine_name.get().lower()
+    
+    def get_lang_code(self):
+        code = self.character.get_lang_code(
+            self.selected_region_name.get(),
+            self.selected_engine_name.get().lower(),
             self.selected_lang_name.get()
         )
+        print(code)
+        return code
 
 
 
