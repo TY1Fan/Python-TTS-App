@@ -1,4 +1,5 @@
 import os
+import sys
 import boto3
 
 from elevenlabs import ElevenLabs
@@ -14,12 +15,22 @@ class Client:
         if client_name == "AWS":
             self.session = self.set_polly_session()
 
-    # Used ChatGPT-4o to generate lines 16 - 49 for better credential management
+    # Used ChatGPT-4o to generate lines 19 - 76 for better credential management
     def _load_credentials(self):
+        if getattr(sys, 'frozen', False):
+            # Running in a bundle (PyInstaller)
+            base_path = os.path.dirname(sys.executable)
+        else:
+            # Running as a script
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        # Path to the .env or credentials file in the same folder as the exe/script
+        env_file_path = os.path.join(base_path, self.API_KEY_FILE)
+
         creds = {}
-        if not os.path.isfile(self.API_KEY_FILE):
+        if not os.path.isfile(env_file_path):
             return creds
-        with open(self.API_KEY_FILE, "r") as f:
+        with open(env_file_path, "r") as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#") or "=" not in line:
@@ -29,13 +40,27 @@ class Client:
         return creds
 
     def _write_credentials(self):
+        # Get the path to the directory of the executable or script
+        if getattr(sys, 'frozen', False):
+            # Running in a bundle (PyInstaller)
+            base_path = os.path.dirname(sys.executable)
+        else:
+            # Running as a script
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        # Path to the .env or credentials file in the same folder as the exe/script
+        env_file_path = os.path.join(base_path, self.API_KEY_FILE)
+
+        # Write credentials to file
         lines = []
         for k, v in self.credentials.items():
-            # wrap in quotes if contains spaces or special chars
             safe_val = v if '"' in v else f'"{v}"'
             lines.append(f"{k}={safe_val}")
-        with open(self.API_KEY_FILE, "w") as f:
+
+        with open(env_file_path, "w") as f:
             f.write("\n".join(lines) + "\n")
+
+        self.API_KEY_FILE = env_file_path  # Optional: store path if used elsewhere
 
     def set_credential(self, key: str, value: str):
         self.credentials[key] = value.strip()

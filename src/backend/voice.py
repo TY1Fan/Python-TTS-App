@@ -1,4 +1,4 @@
-import time
+import sys
 import pygame
 import os
 import datetime
@@ -46,7 +46,13 @@ class Voice(Character):
             return "Error generating audio"
 
     def save_to_aws(self, output_file, voice_id):
-        audio_folder = "aws_audio"
+
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        audio_folder = os.path.join(base_dir, "aws_audio")
         voice_name = voice_id.lower()
         timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H_%M_%S")
         

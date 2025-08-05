@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import zipfile
 
@@ -24,7 +25,12 @@ class User(Client):
     
     def download_history_audio(self, output_dir="history_audio"):
 
-        os.makedirs(output_dir, exist_ok=True)
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+        audio_folder = os.path.join(base_dir, output_dir)
+        os.makedirs(audio_folder, exist_ok=True)
 
         history_response = self.client.history.list(page_size=20)
         history_items = history_response.history
