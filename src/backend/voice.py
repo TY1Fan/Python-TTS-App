@@ -12,7 +12,7 @@ class Voice(Character):
     def __init__(self, client_name):
         super().__init__(client_name=client_name)
 
-    def generate_audio_from_text(self, model_id, voice_id, text, output_file, settings=None, text_type="text"):
+    def generate_audio_from_text(self, model_id, voice_id, text, output_file, settings=None, text_type="text", lang=None):
         try:
             if self.client_name == "ElevenLabs":
                 audio = self.client.text_to_speech.convert(
@@ -28,6 +28,7 @@ class Voice(Character):
             elif self.client_name == "AWS":
                 audio = self.client.synthesize_speech(
                     Engine=model_id,
+                    LanguageCode=lang,
                     OutputFormat='mp3',
                     Text=text,
                     TextType=text_type,
