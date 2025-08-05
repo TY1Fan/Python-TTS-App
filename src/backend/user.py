@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import zipfile
 
@@ -6,9 +7,10 @@ from backend.client import Client
 
 class User(Client):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, client_name):
+        super().__init__(client_name=client_name)
     
+    ##### For ElevenLabs Users #####
     def get_usage(self):
         try:
             subscription = self.client.user.subscription.get()
@@ -23,7 +25,13 @@ class User(Client):
     
     def download_history_audio(self, output_dir="history_audio"):
 
-        os.makedirs(output_dir, exist_ok=True)
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            current_file = os.path.abspath(__file__)
+            base_dir = os.path.dirname(os.path.dirname(current_file))
+        audio_folder = os.path.join(base_dir, output_dir)
+        os.makedirs(audio_folder, exist_ok=True)
 
         history_response = self.client.history.list(page_size=20)
         history_items = history_response.history
@@ -37,7 +45,7 @@ class User(Client):
         url = "https://api.elevenlabs.io/v1/history/download"
         payload = {"history_item_ids": history_ids}
         headers = {
-            "xi-api-key": self.get_api_key(),
+            "xi-api-key": self.credentials.get("ELEVENLABS_API_KEY"),
             "Content-Type": "application/json"
         }
 
@@ -55,3 +63,4 @@ class User(Client):
 
         # Return list of downloaded files
         return [os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.endswith(".mp3")]
+    

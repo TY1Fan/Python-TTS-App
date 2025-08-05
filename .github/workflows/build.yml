@@ -23,7 +23,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build .exe
-        run: pyinstaller --onefile --noconsole --name=thinkaloud app.py
+        run: pyinstaller --onefile --noconsole --name=thinkaloud src/app.py
 
       - name: Zip output
         run: |
@@ -51,7 +51,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build .app
-        run: pyinstaller --onefile --noconsole --name=thinkaloud app.py
+        run: pyinstaller --onefile --noconsole --name=thinkaloud src/app.py
 
       - name: Zip output
         run: zip -j thinkaloud-macos.zip dist/thinkaloud
@@ -78,7 +78,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build binary
-        run: pyinstaller --onefile --name=thinkaloud app.py
+        run: pyinstaller --onefile --name=thinkaloud src/app.py
 
       - name: Zip output
         run: zip -j thinkaloud-linux.zip dist/thinkaloud

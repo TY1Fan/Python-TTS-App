@@ -4,7 +4,7 @@ from frontend.components.label import Label
 from frontend.components.entry import Entry
 from frontend.components.button import Button
 
-class Api_Screen:
+class AWS_Api_Screen:
 
     def __init__(self, client, main_screen):
         self.client = client
@@ -13,10 +13,12 @@ class Api_Screen:
         self.entry = Entry()
         self.button = Button()
 
-    def on_submit(self, root, api_key_entry):
-        if self.client.is_valid_key(api_key_entry.get()):
+    def on_submit(self, root, api_key_entry, secret_key_entry):
+        if self.client.is_valid_aws_key(api_key_entry.get(), secret_key_entry.get()):
             api_key = api_key_entry.get()
-            self.client.set_api_key(api_key)
+            self.client.set_credential("AWS_ACCESS_KEY_ID", api_key)
+            secret_key = secret_key_entry.get()
+            self.client.set_credential("AWS_SECRET_ACCESS_KEY", secret_key)
             self.client.set_client()
             root.destroy()
             self.main_screen()
@@ -34,9 +36,11 @@ class Api_Screen:
 
         self.label.create_label(frame, text="ThinkAloud", pady=(10, 2), font=("Helvetica", 20, "bold"))
         self.label.create_label(frame, text="Generate your thoughts out loud", pady=(0, 15), font=("Helvetica", 12, "italic"))
-        self.label.create_label(frame, text="Enter Elevenlabs API Key:", pady=10)
+        self.label.create_label(frame, text="Enter AWS Access Key ID:", pady=10)
         api_key_entry = self.entry.create_entry(frame, pady=10)
+        self.label.create_label(frame, text="Enter AWS Secret Access Key:", pady=10)
+        secret_key_entry = self.entry.create_entry(frame, pady=10)
 
-        self.button.create_button(frame, text="Submit", command=lambda: self.on_submit(root, api_key_entry), pady=10)
+        self.button.create_button(frame, text="Submit", command=lambda: self.on_submit(root, api_key_entry, secret_key_entry), pady=10)
 
         root.mainloop()

@@ -1,4 +1,7 @@
 import tkinter as tk
+import os
+import sys
+import subprocess
 
 from frontend.components.label import Label
 from frontend.components.button import Button
@@ -14,8 +17,15 @@ class Main_Panel:
         self.button = Button()
         self.entry = Entry()
         self.text_entry = TextEntry()
+    
+    # ChatGPT-4o used to generate line 22 to 26 for routing the app back to entry point
+    def restart_app(self):
+        """Restart the application to return to the initial selection screen."""
+        python = sys.executable
+        script_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'app.py')
+        os.execv(python, [python, script_path])
 
-    def display_card(self, parent, char_id):
+    def display_card(self, parent, char_id, root):
         def generate_command(): 
             message = self.voice.generate_audio_from_text(
                 text = text_entry.get("1.0", tk.END).strip(), 
@@ -28,9 +38,13 @@ class Main_Panel:
             status_label.insert(0, "Status: " + message)
             usage_label.config(text=self.user.get_usage())
 
-        
+        def change_tts():
+            root.destroy()
+            self.restart_app()
+            
         self.label.create_label(parent, text="ThinkAloud", pady=(10, 2), font=("Helvetica", 20, "bold"))
         self.label.create_label(parent, text="Generate your thoughts out loud", pady=(0, 15), font=("Helvetica", 12, "italic"))
+        self.button.create_button(parent, text="Change TTS", command=change_tts, pady=10)
         usage_label = self.label.create_label(parent=parent, text=self.user.get_usage(), pady=10)
         status_label = self.entry.create_entry(parent=parent, pady=10, width=30)
         status_label.insert(0, "Status: OK")
@@ -41,4 +55,4 @@ class Main_Panel:
 
         self.button.create_button(button_frame, text="Generate Audio", command=generate_command, pady=10).pack(side="left", padx=5)
         self.button.create_button(button_frame, text="Play", command=lambda: self.voice.play_audio(self.output_file_name), pady=10).pack(side="left", padx=5)
-        self.button.create_button(button_frame, text="Stop", command=lambda: self.voice.stop_audio, pady=10).pack(side="left", padx=5)
+        self.button.create_button(button_frame, text="Stop", command=lambda: self.voice.stop_audio(), pady=10).pack(side="left", padx=5)
