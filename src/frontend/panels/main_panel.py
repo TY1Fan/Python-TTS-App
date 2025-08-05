@@ -18,14 +18,12 @@ class Main_Panel:
         self.entry = Entry()
         self.text_entry = TextEntry()
     
-    # Claude Sonnet 3.7 used to generate line 22 to 28 for routing the app back to entry point
+    # ChatGPT-4o used to generate line 22 to 26 for routing the app back to entry point
     def restart_app(self):
         """Restart the application to return to the initial selection screen."""
         python = sys.executable
         script_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'app.py')
-        
-        # Start the app again in a new process
-        subprocess.Popen([python, script_path])
+        os.execv(python, [python, script_path])
 
     def display_card(self, parent, char_id, root):
         def generate_command(): 
