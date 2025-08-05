@@ -25,7 +25,7 @@ With multiple TTS services available and multiple voices with many configuration
 ![AWS](./images/aws2.png)
 1. Under the `Access key best practices & alternatives`, select `Application running outside of AWS`.
 1. Proceed to fill in the other details and create your access keys.
-1. After retrieving your access key, copy the **BOTH** `Access key` and `Secret access key` to a notepad as you will need it later.
+1. After retrieving your access key, copy **BOTH** `Access key` and `Secret access key` to a notepad as you will need it later.
 
 ## Quick start
 1. Download the .exe file [here](https://github.com/TY1Fan/Python-TTS-App/releases). Read the release guide to download the correct file.\
