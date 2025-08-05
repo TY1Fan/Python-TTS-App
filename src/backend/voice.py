@@ -50,7 +50,8 @@ class Voice(Character):
         if getattr(sys, 'frozen', False):
             base_dir = os.path.dirname(sys.executable)
         else:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
+            current_file = os.path.abspath(__file__)
+            base_dir = os.path.dirname(os.path.dirname(current_file))
 
         audio_folder = os.path.join(base_dir, "aws_audio")
         voice_name = voice_id.lower()

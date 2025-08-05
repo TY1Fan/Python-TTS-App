@@ -15,14 +15,15 @@ class Client:
         if client_name == "AWS":
             self.session = self.set_polly_session()
 
-    # Used ChatGPT-4o to generate lines 19 - 76 for better credential management
+    # Used ChatGPT-4o to generate lines 19 - 78 for better credential management
     def _load_credentials(self):
         if getattr(sys, 'frozen', False):
             # Running in a bundle (PyInstaller)
             base_path = os.path.dirname(sys.executable)
         else:
             # Running as a script
-            base_path = os.path.dirname(os.path.abspath(__file__))
+            current_file = os.path.abspath(__file__)
+            base_path = os.path.dirname(os.path.dirname(current_file))
 
         # Path to the .env or credentials file in the same folder as the exe/script
         env_file_path = os.path.join(base_path, self.API_KEY_FILE)
@@ -46,7 +47,8 @@ class Client:
             base_path = os.path.dirname(sys.executable)
         else:
             # Running as a script
-            base_path = os.path.dirname(os.path.abspath(__file__))
+            current_file = os.path.abspath(__file__)
+            base_path = os.path.dirname(os.path.dirname(current_file))
 
         # Path to the .env or credentials file in the same folder as the exe/script
         env_file_path = os.path.join(base_path, self.API_KEY_FILE)
