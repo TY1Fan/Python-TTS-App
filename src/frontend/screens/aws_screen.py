@@ -52,6 +52,9 @@ class AWS_Screen:
         self.history_panel.display_panel(left_frame)
 
         char_id = self.settings_panel.get_char_id
-        self.main_panel.display_card(center_frame, char_id, root)
+        engine = self.settings_panel.get_engine
+        lang_code = self.settings_panel.get_lang_code
+        text_type = self.settings_panel.get_text_type
+        self.main_panel.display_card(center_frame, root, char_id, engine, lang_code, text_type)
 
         root.mainloop()
