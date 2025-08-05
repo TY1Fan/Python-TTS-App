@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 
 from backend.client import Client
@@ -37,10 +38,17 @@ if __name__ == "__main__":
     btn_frame = tk.Frame(root)
     btn_frame.pack(pady=10, fill="x", padx=20)
 
+    if getattr(sys, 'frozen', False):
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        current_file = os.path.abspath(__file__)
+        base_dir = os.path.dirname(current_file)
+    env_file_path = os.path.join(base_dir, "env.txt")
+
     def on_elevenlabs():
         root.destroy()
         client = Client(client_name="ElevenLabs")
-        if not os.path.isfile("env.txt"):
+        if not os.path.isfile(env_file_path):
             api_screen = Api_Screen(client, lambda:launch_home_screen("ElevenLabs"))
             api_screen.display_screen()
         else:
@@ -53,7 +61,7 @@ if __name__ == "__main__":
     def on_aws():
         root.destroy()
         client = Client(client_name="AWS")
-        if not os.path.isfile("env.txt"):
+        if not os.path.isfile(env_file_path):
             api_screen = AWS_Api_Screen(client, lambda:launch_home_screen("AWS"))
             api_screen.display_screen()
         else:
